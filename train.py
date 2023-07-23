@@ -44,7 +44,7 @@ def train(model, loss_func, device, train_loader, optimizer, loss_optimizer, epo
             print("Epoch {} Iteration {}: Loss = {}".format(epoch, batch_idx, loss))
             if loss < best_loss:
                 best_loss = loss
-                PATH = f'/content/SubCenterArcFace/checkpoints/{config.model}_model_s={s}_m={m}_{best_loss}_{epoch}_subcenter_train_k3.pt'
+                PATH = f'/content/ArcFacePytorchMetricsLearning/checkpoints/{config.model}_model_s={s}_m={m}_{best_loss}_{epoch}_subcenter_train_k3.pt'
                 torch.save({
                     'epoch': epoch,
                     'model_state_dict': model.state_dict(),
@@ -138,7 +138,7 @@ if __name__ == '__main__':
     num_epochs = 100
 
     ### pytorch-metric-learning stuff ###
-    loss_func = losses.SubCenterArcFaceLoss(num_classes=1021, embedding_size=512, margin=m, scale=s).to(device)
+    loss_func = losses.ArcFaceLoss(num_classes=1021, embedding_size=512, margin=m, scale=s).to(device)
     loss_optimizer = torch.optim.Adam(loss_func.parameters(), lr=1e-2)
     #loss_optimizer.load_state_dict(checkpoint['loss_optimizer_state_dict'])
     accuracy_calculator = AccuracyCalculator(include=("precision_at_1",), k=3)
@@ -155,7 +155,6 @@ if __name__ == '__main__':
     print(f"There are {len(outliers1)} outliers")
     
     train_imgs = train_dataset.imgs
-    train_imgs = train_imgs.cpu()
     for i in range(len(outliers1)):
         train_imgs = np.delete(train_imgs,outliers1[i])
 
@@ -168,6 +167,6 @@ if __name__ == '__main__':
     #     test_imgs = np.delete(test_imgs, outliers2[i])    
         
     torch.save({
-        'train_dataset_ls': train_dataset.imgs,
+        'train_dataset_ls': train_imgs,
         #'test_dataset_ls': test_dataset.imgs
         },'/content/SubCenterArcFace/outliers/train_remove_outlier.pt' )
