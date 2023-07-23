@@ -44,7 +44,7 @@ def train(model, loss_func, device, train_loader, optimizer, loss_optimizer, epo
             print("Epoch {} Iteration {}: Loss = {}".format(epoch, batch_idx, loss))
             if loss < best_loss:
                 best_loss = loss
-                PATH = f'/content/ArcFacePytorchMetricsLearning/checkpoints/{config.model}_model_s={s}_m={m}_{best_loss}_{epoch}_subcenter_train_k3.pt'
+                PATH = f'/content/ArcFacePytorchMetricsLearning/checkpoints/{config.model}_model_s={s}_m={m}_{best_loss}_{epoch}_arcface_train_k3.pt'
                 torch.save({
                     'epoch': epoch,
                     'model_state_dict': model.state_dict(),
@@ -141,7 +141,7 @@ if __name__ == '__main__':
     loss_func = losses.ArcFaceLoss(num_classes=1021, embedding_size=512, margin=m, scale=s).to(device)
     loss_optimizer = torch.optim.Adam(loss_func.parameters(), lr=1e-2)
     #loss_optimizer.load_state_dict(checkpoint['loss_optimizer_state_dict'])
-    accuracy_calculator = AccuracyCalculator(include=("precision_at_1",), k=3)
+    accuracy_calculator = AccuracyCalculator(include=("precision_at_1",), k=1)
     ### pytorch-metric-learning stuff ###
     for epoch in range(initial_epoch, initial_epoch + num_epochs + 1):
         train(model, loss_func, device, train_loader, optimizer, loss_optimizer, epoch,log_file2)
@@ -150,13 +150,13 @@ if __name__ == '__main__':
     log_file1.close()
     log_file2.close()
     
-    train_embeddings, train_labels = get_all_embeddings(train_dataset, model)    
-    outliers1, _ = loss_func.get_outliers(train_embeddings, train_labels.squeeze(1))
-    print(f"There are {len(outliers1)} outliers")
+    # train_embeddings, train_labels = get_all_embeddings(train_dataset, model)    
+    # outliers1, _ = loss_func.get_outliers(train_embeddings, train_labels.squeeze(1))
+    # print(f"There are {len(outliers1)} outliers")
     
-    train_imgs = train_dataset.imgs
-    for i in range(len(outliers1)):
-        train_imgs = np.delete(train_imgs,outliers1[i])
+    # train_imgs = train_dataset.imgs
+    # for i in range(len(outliers1)):
+    #     train_imgs = np.delete(train_imgs,outliers1[i])
 
     # test_embeddings, test_labels = get_all_embeddings(test_dataset, model)
     # outliers2, _ = loss_func.get_outliers(test_embeddings, test_labels.squeeze(1))
@@ -166,7 +166,7 @@ if __name__ == '__main__':
     # for i in range(len(outliers2)):
     #     test_imgs = np.delete(test_imgs, outliers2[i])    
         
-    torch.save({
-        'train_dataset_ls': train_imgs,
-        #'test_dataset_ls': test_dataset.imgs
-        },'/content/SubCenterArcFace/outliers/train_remove_outlier.pt' )
+    # torch.save({
+    #     'train_dataset_ls': train_imgs,
+    #     #'test_dataset_ls': test_dataset.imgs
+    #     },'/content/ArcFacePytorchMetricsLearning/outliers/train_remove_outlier.pt' )
