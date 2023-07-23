@@ -19,7 +19,7 @@ import time
 import numpy as np
 
 best_loss = 10
-s = 64
+s = 32
 m = 0.2
 best_acc = 0.4
 def train(model, loss_func, device, train_loader, optimizer, loss_optimizer, epoch, log_fil2):
@@ -76,8 +76,8 @@ def test(train_set, test_set, model, accuracy_calculator,epoch,log_file1):
 
 if __name__ == '__main__':
     runtime = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
-    log_file1 = open(os.path.join('logs', '_s=' + str(s) + '_m=' + str(m) + "subcenter_test_r34.txt"), "w", encoding="utf-8")
-    log_file2 = open(os.path.join('logs', '_s=' + str(s) + '_m=' + str(m) + "subcenter_train_r34.txt"), "w", encoding="utf-8")
+    log_file1 = open(os.path.join('logs', '_s=' + str(s) + '_m=' + str(m) + "arcface_test_r34.txt"), "w", encoding="utf-8")
+    log_file2 = open(os.path.join('logs', '_s=' + str(s) + '_m=' + str(m) + "arcface_train_r34.txt"), "w", encoding="utf-8")
 
     device = torch.device("cuda")
     config = Config()
